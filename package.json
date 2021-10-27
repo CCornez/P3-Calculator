@@ -1,0 +1,9 @@
+{
+  "name": "calculator",
+  "scripts": {
+    "start": "parcel ./src/index.html",
+    "build": "npm run clean && parcel build ./src/index.html --dist-dir ./out --no-source-maps",
+    "clean": "rm -rf ./.parcel-cache ./dist ./out",
+    "deploy": "surge ./out --domain https://fe-cc-p3.surge.sh/"
+  }
+}
