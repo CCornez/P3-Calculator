@@ -76,18 +76,23 @@ const inputErase = () => ({
 });
 const inputMultiply = () => ({
   type: INPUTMULTIPLY,
+  payload: "MUL",
 });
 const inputDivide = () => ({
   type: INPUTDIVIDE,
+  payload: "DIV",
 });
 const inputSum = () => ({
   type: INPUTSUM,
+  payload: "SUM",
 });
 const inputMinus = () => ({
   type: INPUTMINUS,
+  payload: "MIN",
 });
 const inputEquals = () => ({
   type: INPUTEQUALS,
+  payload: "EQ",
 });
 
 /**
@@ -108,111 +113,131 @@ const reducer = (state = initialState, action) => {
     case INPUTONE:
       return {
         ...state,
-        number: parseInt([state.number + "1"], 10),
+        number: Number([state.number + "1"], 10),
         render: "number",
       };
     case INPUTTWO:
       return {
         ...state,
-        number: parseInt([state.number + "2"]),
+        number: Number([state.number + "2"]),
         render: "number",
       };
     case INPUTTHREE:
       return {
         ...state,
-        number: parseInt([state.number + "3"]),
+        number: Number([state.number + "3"]),
         render: "number",
       };
     case INPUTFOUR:
       return {
         ...state,
-        number: parseInt([state.number + "4"]),
+        number: Number([state.number + "4"]),
         render: "number",
       };
     case INPUTFIVE:
       return {
         ...state,
-        number: parseInt([state.number + "5"]),
+        number: Number([state.number + "5"]),
         render: "number",
       };
     case INPUTSIX:
       return {
         ...state,
-        number: parseInt([state.number + "6"]),
+        number: Number([state.number + "6"]),
         render: "number",
       };
     case INPUTSEVEN:
       return {
         ...state,
-        number: parseInt([state.number + "7"]),
+        number: Number([state.number + "7"]),
         render: "number",
       };
     case INPUTEIGHT:
       return {
         ...state,
-        number: parseInt([state.number + "8"]),
+        number: Number([state.number + "8"]),
         render: "number",
       };
     case INPUTNINE:
       return {
         ...state,
-        number: parseInt([state.number + "9"]),
+        number: Number([state.number + "9"]),
         render: "number",
       };
     case INPUTZERO:
       return {
         ...state,
-        number: parseInt([state.number + "0"]),
+        number: Number([state.number + "0"]),
         render: "number",
       };
 
-    //operators (needs work) !not working as intended!
+    //operators
 
     case INPUTMULTIPLY:
-      if (state.total || state.total === 0) {
-        return {
-          ...state,
-          number: 0,
-          total: multiply(state.total, state.number),
-          render: "total",
-        };
-      } else {
-        console.log(state.total);
-        return { ...state, number: 0, total: state.number };
-      }
     case INPUTDIVIDE:
-      if (state.total) {
-        return {
-          ...state,
-          number: 0,
-          total: divide(state.total, state.number),
-          render: "total",
-        };
-      } else {
-        return { ...state, number: 0, total: state.number };
-      }
     case INPUTSUM:
-      if (state.total) {
-        return {
-          ...state,
-          number: 0,
-          total: sum(state.total, state.number),
-          render: "total",
-        };
-      } else {
-        return { ...state, number: 0, total: state.number };
-      }
     case INPUTMINUS:
-      if (state.total) {
-        return {
-          ...state,
-          number: 0,
-          total: minus(state.total, state.number),
-          render: "total",
-        };
-      } else {
-        return { ...state, number: 0, total: state.number };
+    case INPUTEQUALS:
+      switch (state.payload) {
+        case "MUL":
+          return {
+            ...state,
+            number: 0,
+            total: multiply(state.total, state.number),
+            render: "total",
+            payload: action.payload,
+          };
+        case "DIV":
+          return {
+            ...state,
+            number: 0,
+            total: divide(state.total, state.number),
+            render: "total",
+            payload: action.payload,
+          };
+        case "SUM":
+          return {
+            ...state,
+            number: 0,
+            total: sum(state.total, state.number),
+            render: "total",
+            payload: action.payload,
+          };
+        case "MIN":
+          return {
+            ...state,
+            number: 0,
+            total: minus(state.total, state.number),
+            render: "total",
+            payload: action.payload,
+          };
+        case "EQ":
+          console.log(state);
+          return {
+            ...state,
+            render: "total",
+            payload: action.payload,
+          };
+        default:
+          return {
+            ...state,
+            number: 0,
+            total: state.number,
+            render: "total",
+            payload: action.payload,
+          };
       }
+
+    //not working 100%
+    case INPUTDECIMAL:
+      if (state.number % 1 === 0) {
+        console.log(state.number);
+        return { ...state, number: [state.number + "."] };
+      } else {
+        return state;
+      }
+    case INPUTERASE:
+      return (state = initialState);
     default:
       return state;
   }
@@ -266,3 +291,9 @@ document.querySelector(".btnDivide").onclick = () =>
 document.querySelector(".btnSum").onclick = () => myStore.dispatch(inputSum());
 document.querySelector(".btnMinus").onclick = () =>
   myStore.dispatch(inputMinus());
+document.querySelector(".btnEquals").onclick = () =>
+  myStore.dispatch(inputEquals());
+document.querySelector(".btnDecimal").onclick = () =>
+  myStore.dispatch(inputDecimal());
+document.querySelector(".btnErase").onclick = () =>
+  myStore.dispatch(inputErase());
