@@ -5,5 +5,11 @@
     "build": "npm run clean && parcel build ./src/index.html --dist-dir ./out --no-source-maps",
     "clean": "rm -rf ./.parcel-cache ./dist ./out",
     "deploy": "surge ./out --domain https://fe-cc-p3.surge.sh/"
+  },
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.0.0"
+  },
+  "dependencies": {
+    "redux": "^4.1.1"
   }
 }
