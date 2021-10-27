@@ -212,7 +212,6 @@ const reducer = (state = initialState, action) => {
             payload: action.payload,
           };
         case "EQ":
-          console.log(state);
           return {
             ...state,
             render: "total",
@@ -231,7 +230,6 @@ const reducer = (state = initialState, action) => {
     //not working 100%
     case INPUTDECIMAL:
       if (state.number % 1 === 0) {
-        console.log(state.number);
         return { ...state, number: [state.number + "."] };
       } else {
         return state;
