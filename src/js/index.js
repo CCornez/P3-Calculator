@@ -102,7 +102,7 @@ const reducer = (state = initialState, action) => {
           return {
             ...state,
             number: '0',
-            total: multiply(state.total, state.number),
+            total: multiply(state.total, Number(state.number)),
             render: 'total',
             payload: action.payload,
           };
@@ -110,7 +110,7 @@ const reducer = (state = initialState, action) => {
           return {
             ...state,
             number: '0',
-            total: divide(state.total, state.number),
+            total: divide(state.total, Number(state.number)),
             render: 'total',
             payload: action.payload,
           };
@@ -118,7 +118,7 @@ const reducer = (state = initialState, action) => {
           return {
             ...state,
             number: '0',
-            total: sum(state.total, state.number),
+            total: sum(state.total, Number(state.number)),
             render: 'total',
             payload: action.payload,
           };
@@ -126,7 +126,7 @@ const reducer = (state = initialState, action) => {
           return {
             ...state,
             number: '0',
-            total: minus(state.total, state.number),
+            total: minus(state.total, Number(state.number)),
             render: 'total',
             payload: action.payload,
           };
@@ -140,7 +140,7 @@ const reducer = (state = initialState, action) => {
           return {
             ...state,
             number: '0',
-            total: state.number,
+            total: Number(state.number),
             render: 'total',
             payload: action.payload,
           };
