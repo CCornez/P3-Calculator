@@ -1,6 +1,7 @@
-import "../css/style.scss";
-import * as redux from "redux";
-import { multiply, divide, sum, minus } from "./helper";
+import '../css/style.scss';
+import { createStore, applyMiddleware } from 'redux';
+import logger from 'redux-logger';
+import { multiply, divide, sum, minus } from './helper';
 
 /**
  * Actiontypes
@@ -8,62 +9,27 @@ import { multiply, divide, sum, minus } from "./helper";
 
 //numbers
 
-const INPUTONE = "INPUTONE";
-const INPUTTWO = "INPUTTWO";
-const INPUTTHREE = "INPUTTHREE";
-const INPUTFOUR = "INPUTFOUR";
-const INPUTFIVE = "INPUTFIVE";
-const INPUTSIX = "INPUTSIX";
-const INPUTSEVEN = "INPUTSEVEN";
-const INPUTEIGHT = "INPUTEIGHT";
-const INPUTNINE = "INPUTNINE";
-const INPUTZERO = "INPUTZERO";
+const INPUTNUMBER = 'INPUTNUMBER';
 
 //operators
 
-const INPUTDECIMAL = "INPUTDECIMAL";
-const INPUTERASE = "INPUTERASE";
-const INPUTMULTIPLY = "INPUTMUPLTIPLY";
-const INPUTDIVIDE = "INPUTDIVIDE";
-const INPUTSUM = "INPUTSUM";
-const INPUTMINUS = "INPUTMINUS";
-const INPUTEQUALS = "INPUTEQUALS";
+const INPUTDECIMAL = 'INPUTDECIMAL';
+const INPUTERASE = 'INPUTERASE';
+const INPUTMULTIPLY = 'INPUTMUPLTIPLY';
+const INPUTDIVIDE = 'INPUTDIVIDE';
+const INPUTSUM = 'INPUTSUM';
+const INPUTMINUS = 'INPUTMINUS';
+const INPUTEQUALS = 'INPUTEQUALS';
 
 /**
  * Action Creators
  */
 
-//numbers
-
-const inputOne = () => ({
-  type: INPUTONE,
-});
-const inputTwo = () => ({
-  type: INPUTTWO,
-});
-const inputThree = () => ({
-  type: INPUTTHREE,
-});
-const inputFour = () => ({
-  type: INPUTFOUR,
-});
-const inputFive = () => ({
-  type: INPUTFIVE,
-});
-const inputSix = () => ({
-  type: INPUTSIX,
-});
-const inputSeven = () => ({
-  type: INPUTSEVEN,
-});
-const inputEight = () => ({
-  type: INPUTEIGHT,
-});
-const inputNine = () => ({
-  type: INPUTNINE,
-});
-const inputZero = () => ({
-  type: INPUTZERO,
+const inputNumber = (payload) => ({
+  type: INPUTNUMBER,
+  payload: {
+    number: payload,
+  },
 });
 
 //operators
@@ -76,23 +42,23 @@ const inputErase = () => ({
 });
 const inputMultiply = () => ({
   type: INPUTMULTIPLY,
-  payload: "MUL",
+  payload: 'MUL',
 });
 const inputDivide = () => ({
   type: INPUTDIVIDE,
-  payload: "DIV",
+  payload: 'DIV',
 });
 const inputSum = () => ({
   type: INPUTSUM,
-  payload: "SUM",
+  payload: 'SUM',
 });
 const inputMinus = () => ({
   type: INPUTMINUS,
-  payload: "MIN",
+  payload: 'MIN',
 });
 const inputEquals = () => ({
   type: INPUTEQUALS,
-  payload: "EQ",
+  payload: 'EQ',
 });
 
 /**
@@ -100,7 +66,7 @@ const inputEquals = () => ({
  */
 
 const initialState = {
-  number: 0,
+  number: '0',
 };
 
 /**
@@ -109,67 +75,20 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    //numbers
-    case INPUTONE:
-      return {
-        ...state,
-        number: Number([state.number + "1"], 10),
-        render: "number",
-      };
-    case INPUTTWO:
-      return {
-        ...state,
-        number: Number([state.number + "2"]),
-        render: "number",
-      };
-    case INPUTTHREE:
-      return {
-        ...state,
-        number: Number([state.number + "3"]),
-        render: "number",
-      };
-    case INPUTFOUR:
-      return {
-        ...state,
-        number: Number([state.number + "4"]),
-        render: "number",
-      };
-    case INPUTFIVE:
-      return {
-        ...state,
-        number: Number([state.number + "5"]),
-        render: "number",
-      };
-    case INPUTSIX:
-      return {
-        ...state,
-        number: Number([state.number + "6"]),
-        render: "number",
-      };
-    case INPUTSEVEN:
-      return {
-        ...state,
-        number: Number([state.number + "7"]),
-        render: "number",
-      };
-    case INPUTEIGHT:
-      return {
-        ...state,
-        number: Number([state.number + "8"]),
-        render: "number",
-      };
-    case INPUTNINE:
-      return {
-        ...state,
-        number: Number([state.number + "9"]),
-        render: "number",
-      };
-    case INPUTZERO:
-      return {
-        ...state,
-        number: Number([state.number + "0"]),
-        render: "number",
-      };
+    case INPUTNUMBER:
+      if (state.number === '0') {
+        return {
+          ...state,
+          number: action.payload.number,
+          render: 'number',
+        };
+      } else {
+        return {
+          ...state,
+          number: state.number + action.payload.number,
+          render: 'number',
+        };
+      }
 
     //operators
 
@@ -179,60 +98,60 @@ const reducer = (state = initialState, action) => {
     case INPUTMINUS:
     case INPUTEQUALS:
       switch (state.payload) {
-        case "MUL":
+        case 'MUL':
           return {
             ...state,
-            number: 0,
+            number: '0',
             total: multiply(state.total, state.number),
-            render: "total",
+            render: 'total',
             payload: action.payload,
           };
-        case "DIV":
+        case 'DIV':
           return {
             ...state,
-            number: 0,
+            number: '0',
             total: divide(state.total, state.number),
-            render: "total",
+            render: 'total',
             payload: action.payload,
           };
-        case "SUM":
+        case 'SUM':
           return {
             ...state,
-            number: 0,
+            number: '0',
             total: sum(state.total, state.number),
-            render: "total",
+            render: 'total',
             payload: action.payload,
           };
-        case "MIN":
+        case 'MIN':
           return {
             ...state,
-            number: 0,
+            number: '0',
             total: minus(state.total, state.number),
-            render: "total",
+            render: 'total',
             payload: action.payload,
           };
-        case "EQ":
+        case 'EQ':
           return {
             ...state,
-            render: "total",
+            render: 'total',
             payload: action.payload,
           };
         default:
           return {
             ...state,
-            number: 0,
+            number: '0',
             total: state.number,
-            render: "total",
+            render: 'total',
             payload: action.payload,
           };
       }
 
     //not working 100%
     case INPUTDECIMAL:
-      if (state.number % 1 === 0) {
-        return { ...state, number: [state.number + "."] };
-      } else {
+      if (state.number.toString().includes('.')) {
         return state;
+      } else {
+        return { ...state, number: [state.number + '.'] };
       }
     case INPUTERASE:
       return (state = initialState);
@@ -245,18 +164,18 @@ const reducer = (state = initialState, action) => {
  * Store
  */
 
-const myStore = redux.createStore(reducer);
+const myStore = createStore(reducer, applyMiddleware(logger));
 
 /**
  * Render
  */
 
 const renderNumber = () => {
-  myStore.getState().render === "total"
-    ? ((document.querySelector(".display p").innerHTML =
+  myStore.getState().render === 'total'
+    ? ((document.querySelector('.display p').innerHTML =
         myStore.getState().total),
       10)
-    : ((document.querySelector(".display p").innerHTML =
+    : ((document.querySelector('.display p').innerHTML =
         myStore.getState().number),
       10);
 };
@@ -269,29 +188,25 @@ renderNumber();
 
 //numbers
 
-document.querySelector(".btn1").onclick = () => myStore.dispatch(inputOne());
-document.querySelector(".btn2").onclick = () => myStore.dispatch(inputTwo());
-document.querySelector(".btn3").onclick = () => myStore.dispatch(inputThree());
-document.querySelector(".btn4").onclick = () => myStore.dispatch(inputFour());
-document.querySelector(".btn5").onclick = () => myStore.dispatch(inputFive());
-document.querySelector(".btn6").onclick = () => myStore.dispatch(inputSix());
-document.querySelector(".btn7").onclick = () => myStore.dispatch(inputSeven());
-document.querySelector(".btn8").onclick = () => myStore.dispatch(inputEight());
-document.querySelector(".btn9").onclick = () => myStore.dispatch(inputNine());
-document.querySelector(".btn0").onclick = () => myStore.dispatch(inputZero());
+document.querySelector('.numbers').onclick = (e) => {
+  e.preventDefault();
+  if (e.target.classList.contains('btn')) {
+    myStore.dispatch(inputNumber(e.target.outerText));
+  }
+};
 
 //operators
 
-document.querySelector(".btnMultiply").onclick = () =>
+document.querySelector('.btnMultiply').onclick = () =>
   myStore.dispatch(inputMultiply());
-document.querySelector(".btnDivide").onclick = () =>
+document.querySelector('.btnDivide').onclick = () =>
   myStore.dispatch(inputDivide());
-document.querySelector(".btnSum").onclick = () => myStore.dispatch(inputSum());
-document.querySelector(".btnMinus").onclick = () =>
+document.querySelector('.btnSum').onclick = () => myStore.dispatch(inputSum());
+document.querySelector('.btnMinus').onclick = () =>
   myStore.dispatch(inputMinus());
-document.querySelector(".btnEquals").onclick = () =>
+document.querySelector('.btnEquals').onclick = () =>
   myStore.dispatch(inputEquals());
-document.querySelector(".btnDecimal").onclick = () =>
+document.querySelector('.btnDecimal').onclick = () =>
   myStore.dispatch(inputDecimal());
-document.querySelector(".btnErase").onclick = () =>
+document.querySelector('.btnErase').onclick = () =>
   myStore.dispatch(inputErase());
