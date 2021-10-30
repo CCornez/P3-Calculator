@@ -213,7 +213,6 @@ const myStore = createStore(reducer, applyMiddleware(logger));
 
 const renderNumber = () => {
   if (myStore.getState().render === 'total') {
-    console.log('render');
     document.querySelector('.display h2').innerHTML = myStore.getState().total;
     document.querySelector('.display p').innerHTML = myStore.getState().sign;
   } else {
