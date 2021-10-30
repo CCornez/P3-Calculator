@@ -42,23 +42,38 @@ const inputErase = () => ({
 });
 const inputMultiply = () => ({
   type: INPUTMULTIPLY,
-  payload: 'MUL',
+  payload: {
+    operator: 'MUL',
+    sign: 'x',
+  },
 });
 const inputDivide = () => ({
   type: INPUTDIVIDE,
-  payload: 'DIV',
+  payload: {
+    operator: 'DIV',
+    sign: '&#247',
+  },
 });
 const inputSum = () => ({
   type: INPUTSUM,
-  payload: 'SUM',
+  payload: {
+    operator: 'SUM',
+    sign: '+',
+  },
 });
 const inputMinus = () => ({
   type: INPUTMINUS,
-  payload: 'MIN',
+  payload: {
+    operator: 'MIN',
+    sign: '-',
+  },
 });
 const inputEquals = () => ({
   type: INPUTEQUALS,
-  payload: 'EQ',
+  payload: {
+    operator: 'EQ',
+    sign: '=',
+  },
 });
 
 /**
@@ -67,28 +82,49 @@ const inputEquals = () => ({
 
 const initialState = {
   number: '0',
+  sign: '',
 };
 
 /**
  * Reducer
  */
 
-const reducer = (state = initialState, action) => {
-  switch (action.type) {
+const reducer = (state = initialState, { type, payload }) => {
+  switch (type) {
     case INPUTNUMBER:
       if (state.number === '0') {
         return {
           ...state,
-          number: action.payload.number,
+          number: payload.number,
           render: 'number',
         };
       } else {
         return {
           ...state,
-          number: state.number + action.payload.number,
+          number: state.number + payload.number,
           render: 'number',
         };
       }
+    case INPUTDECIMAL:
+      if (state.number.includes('.')) {
+        return state;
+      } else {
+        if (state.number === '') {
+          return {
+            ...state,
+            number: state.number + '0.',
+            render: 'number',
+          };
+        } else {
+          return {
+            ...state,
+            number: state.number + '.',
+            render: 'number',
+          };
+        }
+      }
+    case INPUTERASE:
+      return initialState;
 
     //operators
 
@@ -97,64 +133,69 @@ const reducer = (state = initialState, action) => {
     case INPUTSUM:
     case INPUTMINUS:
     case INPUTEQUALS:
-      switch (state.payload) {
-        case 'MUL':
-          return {
-            ...state,
-            number: '0',
-            total: multiply(state.total, Number(state.number)),
-            render: 'total',
-            payload: action.payload,
-          };
-        case 'DIV':
-          return {
-            ...state,
-            number: '0',
-            total: divide(state.total, Number(state.number)),
-            render: 'total',
-            payload: action.payload,
-          };
-        case 'SUM':
-          return {
-            ...state,
-            number: '0',
-            total: sum(state.total, Number(state.number)),
-            render: 'total',
-            payload: action.payload,
-          };
-        case 'MIN':
-          return {
-            ...state,
-            number: '0',
-            total: minus(state.total, Number(state.number)),
-            render: 'total',
-            payload: action.payload,
-          };
-        case 'EQ':
-          return {
-            ...state,
-            render: 'total',
-            payload: action.payload,
-          };
-        default:
-          return {
-            ...state,
-            number: '0',
-            total: Number(state.number),
-            render: 'total',
-            payload: action.payload,
-          };
-      }
-
-    //not working 100%
-    case INPUTDECIMAL:
-      if (state.number.toString().includes('.')) {
-        return state;
+      if (state.number === '') {
+        return {
+          ...state,
+          operator: payload.operator,
+          sign: payload.sign,
+        };
       } else {
-        return { ...state, number: [state.number + '.'] };
+        switch (state.operator) {
+          case 'MUL':
+            return {
+              ...state,
+              number: '',
+              total: multiply(state.total, Number(state.number)),
+              render: 'total',
+              operator: payload.operator,
+              sign: payload.sign,
+            };
+          case 'DIV':
+            return {
+              ...state,
+              number: '',
+              total: divide(state.total, Number(state.number)),
+              render: 'total',
+              operator: payload.operator,
+              sign: payload.sign,
+            };
+          case 'SUM':
+            return {
+              ...state,
+              number: '',
+              total: sum(state.total, Number(state.number)),
+              render: 'total',
+              operator: payload.operator,
+              sign: payload.sign,
+            };
+          case 'MIN':
+            return {
+              ...state,
+              number: '',
+              total: minus(state.total, Number(state.number)),
+              render: 'total',
+              operator: payload.operator,
+              sign: payload.sign,
+            };
+          case 'EQ':
+            return {
+              ...state,
+              number: '',
+              render: 'total',
+              operator: payload.operator,
+              sign: payload.sign,
+            };
+          default:
+            return {
+              ...state,
+              number: '',
+              total: Number(state.number),
+              render: 'total',
+              operator: payload.operator,
+              sign: payload.sign,
+            };
+        }
       }
-    case INPUTERASE:
-      return (state = initialState);
     default:
       return state;
   }
@@ -171,13 +212,14 @@ const myStore = createStore(reducer, applyMiddleware(logger));
  */
 
 const renderNumber = () => {
-  myStore.getState().render === 'total'
-    ? ((document.querySelector('.display p').innerHTML =
-        myStore.getState().total),
-      10)
-    : ((document.querySelector('.display p').innerHTML =
-        myStore.getState().number),
-      10);
+  if (myStore.getState().render === 'total') {
+    console.log('render');
+    document.querySelector('.display h2').innerHTML = myStore.getState().total;
+    document.querySelector('.display p').innerHTML = myStore.getState().sign;
+  } else {
+    document.querySelector('.display h2').innerHTML = myStore.getState().number;
+    document.querySelector('.display p').innerHTML = myStore.getState().sign;
+  }
 };
 myStore.subscribe(renderNumber);
 renderNumber();
